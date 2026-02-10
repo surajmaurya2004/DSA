@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int maximizeSquareArea(int m, int n, vector<int>& hFences, vector<int>& vFences) {
+        
+        const long long MOD = 1e9 + 7;
+        
+        // Step 1: Add boundaries
+        hFences.push_back(1);
+        hFences.push_back(m);
+        vFences.push_back(1);
+        vFences.push_back(n);
+        
+        // Step 2: Sort
+        sort(hFences.begin(), hFences.end());
+        sort(vFences.begin(), vFences.end());
+        
+        // Step 3: Store all horizontal gaps
+        unordered_set<int> hGaps;
+        for(int i = 0; i < hFences.size(); i++) {
+            for(int j = i + 1; j < hFences.size(); j++) {
+                hGaps.insert(hFences[j] - hFences[i]);
+            }
+        }
+        
+        // Step 4: Check vertical gaps & find max common
+        long long maxSide = 0;
+        
+        for(int i = 0; i < vFences.size(); i++) {
+            for(int j = i + 1; j < vFences.size(); j++) {
+                int gap = vFences[j] - vFences[i];
+                
+                if(hGaps.count(gap)) {
+                    maxSide = max(maxSide, (long long)gap);
+                }
+            }
+        }
+        
+        if(maxSide == 0) return -1;
+        
+        return (maxSide * maxSide) % MOD;
+    }
+};
